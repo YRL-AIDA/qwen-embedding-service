@@ -20,7 +20,7 @@ Option #1:
 ```bash
 curl -X POST http://localhost:8000/embed \
   -H "Content-Type: application/json" \
-  -d '{"documents": [{"text": "What is RAG?"}]}'
+  -d '{"messages": [{"type": "text", "text": "What is RAG?"}]}'
 ```
 
 Option #2:
@@ -41,10 +41,10 @@ You'll get a JSON response `response.json` with L2-normalized embeddings.
 `POST /embed`:
 ```json
 {
-  "documents": [
-    {"text": "Text document #1"},
-    {"image": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg"},
-    {"image": "uploads/demo.jpeg"}
+  "messages": [
+    {"type": "text", "text": "Text document #1"},
+    {"type": "image_url", "image_url": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg"},
+    {"type": "image", "image": "uploads/demo.jpeg"}
   ]
 }
 ```

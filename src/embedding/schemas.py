@@ -1,8 +1,17 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from pydantic import BaseModel
 
 
 
+class Message(BaseModel):
+    type: str
+
+    text: Union[str, None] = None
+    image: Union[str, None] = None
+    image_url: Union[str, None] = None
+
+
+
 class EmbedRequest(BaseModel):
-    documents: List[Dict]
+    messages: List[Message]
