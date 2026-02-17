@@ -15,3 +15,9 @@ class Message(BaseModel):
 
 class EmbedRequest(BaseModel):
     messages: List[Message]
+
+
+
+class EmbedResponse(BaseModel):
+    message_id: int
+    embedding: List[float]
