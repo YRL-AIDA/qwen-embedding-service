@@ -1,0 +1,21 @@
+# Python specific
+*.pyc
+__pycache__/
+venv/
+.venv/
+.Python
+pip-log.txt
+pip-delete-this-arg.txt
+
+# General
+.git
+.gitignore
+.vscode
+.idea
+*.log
+npm-debug.log
+node_modules/
+
+# virtual env
+.venv/
+venv/
