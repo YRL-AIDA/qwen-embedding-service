@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:2.10.0-cuda13.0-cudnn9-runtime
+FROM ghcr.io/astral-sh/uv:python3.14-trixie-slim
 
 COPY . /app
 
