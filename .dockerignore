@@ -19,3 +19,8 @@ node_modules/
 # virtual env
 .venv/
 venv/
+
+# Not relevant to the build
+*.md
+LICENSE
+
