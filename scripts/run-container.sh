@@ -10,6 +10,6 @@ echo "Starting Docker container $CONTAINER_NAME..."
 
 # Run the container in detached mode (-d), map ports (-p), 
 # name it (--name), and remove it when stopped (--rm)
-docker run --gpus all -d -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN={YOUR_HF_TOKEN} --name $CONTAINER_NAME --rm "$IMAGE_NAME:$TAG"
+docker run --gpus 1 -d -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" --name $CONTAINER_NAME --rm "$IMAGE_NAME:$TAG"
 
 echo "Container $CONTAINER_NAME is running. Access it at http://0.0.0.0:$HOST_PORT"

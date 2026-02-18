@@ -9,7 +9,7 @@ DOCKERFILE="Dockerfile"
 
 
 # The core docker build command
-docker build --pull --build-arg HF_TOKEN=$HF_TOKEN -t "$IMAGE_NAME:$TAG" -f "$DOCKERFILE" .
+docker build --pull -t "$IMAGE_NAME:$TAG" -f "$DOCKERFILE" .
 
 # Check the exit status of the previous command
 if [ $? -eq 0 ]; then
