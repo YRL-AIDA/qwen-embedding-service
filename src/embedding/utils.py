@@ -26,10 +26,10 @@ def preprocess_messages(messages: List[Message]) -> List[Dict[str, str]]:
         elif message.type == "image_url":
             type = "image"
             content = message.image_url
-            if "base64" in message.image_url:
-                content = base64_to_pil_image(message.image_url)
         elif message.type == "image":
             content = message.image
+            if "base64" in message.image:
+                content = base64_to_pil_image(message.image)
         else:
             raise Exception(f"unsupported message type: {message.type}")
         

@@ -1,12 +1,13 @@
-from typing import Dict, List, Union
+from typing import Annotated, List, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, SkipValidation
 
 
 
 class Message(BaseModel):
-    type: str
+    model_config = ConfigDict(extra='ignore')
 
+    type: str
     text: Union[str, None] = None
     image: Union[str, None] = None
     image_url: Union[str, None] = None

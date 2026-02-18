@@ -1,5 +1,6 @@
 import requests
 import json
+from src.embedding.schemas import Message
 from src.settings import settings
 
 
@@ -66,9 +67,14 @@ texts = [
         "What is the meaning of life?"
     ]
 
+image_url = [
+    "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg",
+]
+
 images = [
     "/home/kirilltobola/Downloads/demo.jpeg",
-    "/home/kirilltobola/Downloads/demo.jpeg",
+    "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAE9klEQVR4nOza+1NU5R8HcM/OiqJ+vaB8NVNTxsYroBjgmngpIQ0xKQhNhWBYlASZBiSDDCWJgaRY2EEUTUSEgCndZYHZZCkLRLmNDDFiLrPL3QJBEZQys596v3/oDzhzZs7np9ezwx72M8957o/SrH9v3L+hdpwBJ336DTxLuAuv7l8C911qhhNz1HDcIJ+jj30DPjmenztUfAKnls6GO7QHYDe7ADh31lvwYrdHsGKcxENOQOxQmoZeRGFr10LY6PkyXF6YDRe528HrSyfDtkIW7DcYBKstv8PrNv8Eb/xqE5yrDYF1CVb44LeucHBKBP/vR89hydeAnIDYIWjsHVHwTt8BP/5xH3zG/xBssFkNO2vYTsL6K+DvDHlw24A3bNR/D8clfAmndl2EN2Z9AW+Ir4LNbUfgw9rjsORrQE5A7BCqnnWhYHe/El4TJsB7J7INnBFWweP9NPDx1JXwI/cS+PT+ObBn3i/wtQy2n8L9C+DI6CnwZVM3XD+jHdaEb4YlXwNyAmKH8mlgDQraxDJYp5gAn/bTwx+M1MHGikh4sIZzqg7Vh7B/+8dwYBnn9KqJfH7g9q/hB3PYrmY3OsF5wkJ4bshMWPI1ICcgdihfSn+Cgl+8CdYlhMEZydWw2on99OQgFXz7Vc5PzGu1cHlnI5zVEQVvtnjAmUNcW1e7r4G7PMLhnYUusL2zDyz5GpATEDuUV6e/gEKplf33Yq+18PxorgFKXufnSiv3iyYMsf+eouLa4KGBY4hrGuf9AcVc1x47/xnc4rIBLpv0Nmx7h+PVWe9UWPI1ICcgdggT49gGptokwz+YW+BR7SB8ImQMdrYsh7tVHAfio+xh/5VpsMPoa/A7vpzTG43cnz2wQQebijn+tFfxvT+1ox6WfA3ICYgdQsGv3KtxGuB7f87UCzu4+sLNUZvgNzXp8MypnfDuBq5lj+RzvrT8WQ/c6sr1wHIPzpGszQ78dT9zLW5s3grv+3w7LPkakBMQO5T30jlvac1n/x2z1wLfVZ7nN5z+B5q33IYTLnGeExRzE156KhqutDyGG6/Mg5ckcmzxDMiHR2y94AstuXDJ9UWw5GtATkDsEHrvPEDhoPO78OWBDDjv6VH4ptdD2BzjDBe3cr4UsY3r7ME93HtVLGCb+e3QNfjElT44bVkBnH2BZ203Mnm+ZpvSz2f+NydphZyA2CEs9WJfW7eD52IZsQ3wiqYk2HHXANzncwyuXsF5VFn6+/x7z+lweO9OeLGC+0ILtnLv31XNNlndcw92iR+Gjw7wDE7yNSAnIHYImwJvoaAv94RDFyXCltplcNAY+2mDjvuV62I5j1/V8zc8t557SvZ/2MB7crgeuOXDdUKJdxxs48I2GVzOs7ZpK6yw5GtATkDsUK4M5ny9/+orcPtS3ku7EWGFs+v4vkbpeM9nW78BbqvhPQh9Ee8UzWvmPs/h1bxj5zvGZ+5W8aygMKkcXlXKH93X6Q5LvgbkBMQOYXiE/XSeifMWt+RQuEHBdbOPUxG8tp33QCMLeH48N5lr313u92EPA8+hJwXwPkXTMMeQWsV6uNXuLHx9uBZ25LAk/RqQExA7BE3+JBTO6dnZzgzl+6oOHc8v5PDudMpF3n34fxPXrNMq+ZzMqVtg/1HeIbUV/oIbik7CiX/O5/OfcA3QHco93JTnbrDka0BOQOz4JwAA//+asYDdwHZqpgAAAABJRU5ErkJggg==",
+    "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAE9klEQVR4nOza+1NU5R8HcM/OiqJ+vaB8NVNTxsYroBjgmngpIQ0xKQhNhWBYlASZBiSDDCWJgaRY2EEUTUSEgCndZYHZZCkLRLmNDDFiLrPL3QJBEZQys596v3/oDzhzZs7np9ezwx72M8957o/SrH9v3L+hdpwBJ336DTxLuAuv7l8C911qhhNz1HDcIJ+jj30DPjmenztUfAKnls6GO7QHYDe7ADh31lvwYrdHsGKcxENOQOxQmoZeRGFr10LY6PkyXF6YDRe528HrSyfDtkIW7DcYBKstv8PrNv8Eb/xqE5yrDYF1CVb44LeucHBKBP/vR89hydeAnIDYIWjsHVHwTt8BP/5xH3zG/xBssFkNO2vYTsL6K+DvDHlw24A3bNR/D8clfAmndl2EN2Z9AW+Ir4LNbUfgw9rjsORrQE5A7BCqnnWhYHe/El4TJsB7J7INnBFWweP9NPDx1JXwI/cS+PT+ObBn3i/wtQy2n8L9C+DI6CnwZVM3XD+jHdaEb4YlXwNyAmKH8mlgDQraxDJYp5gAn/bTwx+M1MHGikh4sIZzqg7Vh7B/+8dwYBnn9KqJfH7g9q/hB3PYrmY3OsF5wkJ4bshMWPI1ICcgdihfSn+Cgl+8CdYlhMEZydWw2on99OQgFXz7Vc5PzGu1cHlnI5zVEQVvtnjAmUNcW1e7r4G7PMLhnYUusL2zDyz5GpATEDuUV6e/gEKplf33Yq+18PxorgFKXufnSiv3iyYMsf+eouLa4KGBY4hrGuf9AcVc1x47/xnc4rIBLpv0Nmx7h+PVWe9UWPI1ICcgdggT49gGptokwz+YW+BR7SB8ImQMdrYsh7tVHAfio+xh/5VpsMPoa/A7vpzTG43cnz2wQQebijn+tFfxvT+1ox6WfA3ICYgdQsGv3KtxGuB7f87UCzu4+sLNUZvgNzXp8MypnfDuBq5lj+RzvrT8WQ/c6sr1wHIPzpGszQ78dT9zLW5s3grv+3w7LPkakBMQO5T30jlvac1n/x2z1wLfVZ7nN5z+B5q33IYTLnGeExRzE156KhqutDyGG6/Mg5ckcmzxDMiHR2y94AstuXDJ9UWw5GtATkDsEHrvPEDhoPO78OWBDDjv6VH4ptdD2BzjDBe3cr4UsY3r7ME93HtVLGCb+e3QNfjElT44bVkBnH2BZ203Mnm+ZpvSz2f+NydphZyA2CEs9WJfW7eD52IZsQ3wiqYk2HHXANzncwyuXsF5VFn6+/x7z+lweO9OeLGC+0ILtnLv31XNNlndcw92iR+Gjw7wDE7yNSAnIHYImwJvoaAv94RDFyXCltplcNAY+2mDjvuV62I5j1/V8zc8t557SvZ/2MB7crgeuOXDdUKJdxxs48I2GVzOs7ZpK6yw5GtATkDsUK4M5ny9/+orcPtS3ku7EWGFs+v4vkbpeM9nW78BbqvhPQh9Ee8UzWvmPs/h1bxj5zvGZ+5W8aygMKkcXlXKH93X6Q5LvgbkBMQOYXiE/XSeifMWt+RQuEHBdbOPUxG8tp33QCMLeH48N5lr313u92EPA8+hJwXwPkXTMMeQWsV6uNXuLHx9uBZ25LAk/RqQExA7BE3+JBTO6dnZzgzl+6oOHc8v5PDudMpF3n34fxPXrNMq+ZzMqVtg/1HeIbUV/oIbik7CiX/O5/OfcA3QHco93JTnbrDka0BOQOz4JwAA//+asYDdwHZqpgAAAABJRU5ErkJggg==",
 ]
 
 
@@ -83,13 +89,30 @@ def upload_images():
             print(f"Error: {image_path} not found.")
 
 
-def generate_vl_request(texts: list[str], images: list[str], filename: str = "vl_req.json") -> list[dict]:
-    messages = [{"type": "text", "text": text} for text in texts]
-    messages += [
-        {"type": "image", "image": "uploads/" + os.path.basename(img_path)} for img_path in images
-    ]
+def generate_vl_request(texts: list[str], image_url: list[str], images: list[str], filename: str = "vl_req.json") -> list[dict]:
+    messages = []
+    for t in texts:
+        messages.append(
+            Message(type="text", text=t).model_dump()
+        )
+    
+    for url in image_url:
+        messages.append(
+            Message(type="image_url", image_url=url).model_dump()
+        )
+    
+    for image_str in images:
+        if "base64" in image_str:
+            img = image_str
+        else:
+            img = settings.upload_dir + os.path.basename(image_str)
+        messages.append(
+            Message(type="image", image=img).model_dump()
+        )
 
-    payload = {"messages": messages}
+    payload = {
+        "messages": messages
+    }
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
     print(f"Generated  '{filename}' with {len(texts) + len(images)} requests.")
@@ -100,7 +123,7 @@ if __name__ == "__main__":
     os.makedirs("responses/", exist_ok=True)
 
     upload_images()
-    _ = generate_vl_request(texts, images)
+    _ = generate_vl_request(texts, image_url, images)
 
     request = "vl_req.json"
 
