@@ -5,19 +5,19 @@ A lightweight, embedding microservice powered by Alibaba's Qwen3-Embedding model
 ### 1. Setup docker container
 ```bash
 # build image
-docker build --pull --build-arg HF_TOKEN=$HF_TOKEN -t qwen3-emb-service .
+docker build --pull -t qwen3-emb-service .
 
 # run service (cpu)
-docker run -p 10014:8000 -e HF_TOKEN={YOUR_HF_TOKEN} qwen3-emb-service
+docker run -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
 
 # run service (gpu) (requires NVIDIA container toolkit: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
-docker run --gpus all -p 10014:8000 -e HF_TOKEN={YOUR_HF_TOKEN} qwen3-emb-service
+docker run --gpus 1 -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
 ```
 
 ### 2. Test API
 Option #1:
 ```bash
-curl -X POST http://0.0.0.0:10014/embed \
+curl -X POST http://0.0.0.0:{$HOST_PORT}/embedding/embed \
   -H "Content-Type: application/json" \
   -d '{"messages": [{"type": "text", "text": "What is RAG?"}]}'
 ```
@@ -36,7 +36,7 @@ You'll get a JSON response `response.json` with L2-normalized embeddings.
 - **model**: Qwen3-Embedding-`X`B / Qwen3-VL-Embedding-`X`B
 
 
-`POST /embed`:
+`POST /embeddings/embed`:
 ```json
 {
   "messages": [
@@ -50,6 +50,7 @@ You'll get a JSON response `response.json` with L2-normalized embeddings.
 ## Image format
 1. Images can be passed as URL. For example: https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg
 2. Upload images into `uploads` directory and pass filename. For example for image `./uploads/demo.jpg`, in JSON you should pass `uploads/demo.jpg`. 
+3. Image in base64 format.
 
 See `examples/generate_vl_request.py`.
 
