@@ -1,14 +1,15 @@
 #!/bin/bash
 
 CONTAINER_NAME="qwen3-emb-service-instance"
-HOST_PORT=10014
+HOST_PORT=10114
 CONTAINER_PORT=8000
 IMAGE_NAME="qwen3-emb-service"
+TAG="0.1.0"
 
 echo "Starting Docker container $CONTAINER_NAME..."
 
 # Run the container in detached mode (-d), map ports (-p), 
 # name it (--name), and remove it when stopped (--rm)
-docker run --gpus all -d -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN={YOUR_HF_TOKEN} --name $CONTAINER_NAME --rm $IMAGE_NAME
+docker run --gpus all -d -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN={YOUR_HF_TOKEN} --name $CONTAINER_NAME --rm "$IMAGE_NAME:$TAG"
 
 echo "Container $CONTAINER_NAME is running. Access it at http://0.0.0.0:$HOST_PORT"
