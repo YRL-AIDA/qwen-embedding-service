@@ -24,10 +24,10 @@ curl -X POST http://0.0.0.0:{$HOST_PORT}/embedding/embed \
 
 Option #2:
 ```bash
-uv run examples test_call.py
+uv run evaluate.py
 ```
 
-You'll get a JSON response `response.json` with L2-normalized embeddings.
+You'll get a JSON response `/responses/response.json` with L2-normalized embeddings.
 
 
 ## API reference
@@ -50,9 +50,9 @@ You'll get a JSON response `response.json` with L2-normalized embeddings.
 ## Image format
 1. Images can be passed as URL. For example: https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg
 2. Upload images into `uploads` directory and pass filename. For example for image `./uploads/demo.jpg`, in JSON you should pass `uploads/demo.jpg`. 
-3. Image in base64 format.
+3. Image in base64 format, for example: `data:image/jpeg;base64,\9J3fklg...`.
 
-See `examples/generate_vl_request.py`.
+See `evalueate.py`.
 
 ## Embedding dimensions
 Qwen3 Embedding models have user defined output size. You can change `hidden_size` in `config.json` for specific model.
