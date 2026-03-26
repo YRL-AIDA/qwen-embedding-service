@@ -5,13 +5,14 @@ from fastapi import Depends
 import aiofiles
 
 from src.settings import Settings
+from src.settings import settings
 from src.upload.dependencies import get_upload_deps
 
 
-upload_router = APIRouter(prefix="/upload")
+upload_router = APIRouter(prefix=settings.UPLOAD_PREFIX)
 
 
-@upload_router.post("/upload-image")
+@upload_router.post(settings.UPLOAD_ENDPOINT)
 async def upload_image(file: UploadFile = File(...), settings: Settings = Depends(get_upload_deps)):
     """
     Receives an uploaded image file and saves it locally.
@@ -19,7 +20,7 @@ async def upload_image(file: UploadFile = File(...), settings: Settings = Depend
     if not file.content_type.startswith('image/'):
         raise HTTPException(status_code=400, detail="Invalid file type. Only images are allowed.")
 
-    file_location = os.path.join(settings.upload_dir, file.filename)
+    file_location = os.path.join(settings.UPLOAD_DIR, file.filename)
     try:
         async with aiofiles.open(file_location, "wb") as buffer:
             while chunk := await file.read(1024):

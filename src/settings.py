@@ -16,9 +16,19 @@ class Settings(BaseSettings):
     use_vl: bool = True
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
 
+    # Routes
+    EMBEDDING_PREFIX: str = "/embedding"
+    EMBED_ENDPOINT: str = "/embed"
+    EMBED_URL: str = f"http://{service_address}:{service_port}{EMBEDDING_PREFIX}{EMBED_ENDPOINT}"
+
+    UPLOAD_PREFIX: str = "/upload"
+    UPLOAD_ENDPOINT: str = "/upload-image"
+    UPLOAD_URL: str = f"http://{service_address}:{service_port}{UPLOAD_PREFIX}{UPLOAD_ENDPOINT}"
+
     # Files
-    upload_dir: str = "uploads"
-    upload_url: str = "upload/upload-image"
+    UPLOAD_DIR: str ="uploads/"
+    REQUEST_DIR: str="requests/"
+    RESPONSE_DIR: str ="responses/"
 
     # JSON
     encoding: str = "utf-8"
@@ -29,4 +39,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-print(settings.model_dump())

@@ -14,8 +14,10 @@ async def lifespan(app: FastAPI):
     print("Loading settings...")
     app.state.settings = Settings()
 
-    print("Creating uploads directory...")
-    os.makedirs(app.state.settings.upload_dir, exist_ok=True)
+    print("Creating directories...")
+    os.makedirs(app.state.settings.UPLOAD_DIR, exist_ok=True)
+    os.makedirs(app.state.settings.REQUEST_DIR, exist_ok=True)
+    os.makedirs(app.state.settings.RESPONSE_DIR, exist_ok=True)
 
     print(f"Loading model...")
     if app.state.settings.use_vl:
@@ -36,5 +38,7 @@ app = FastAPI(
     version="1.0", 
     lifespan=lifespan
 )
+
+# Routers 
 app.include_router(embedding_router)
 app.include_router(upload_router)

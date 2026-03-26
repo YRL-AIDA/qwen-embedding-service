@@ -10,9 +10,11 @@ from src.embedding.dependencies import get_model_dependency
 from src.embedding.utils import preprocess_messages
 from src.ml.qwen3_vl_embedding import Qwen3VLEmbedder
 
+from src.settings import settings
+
 
 embedding_router = APIRouter(
-    prefix="/embedding"
+    prefix=settings.EMBEDDING_PREFIX
 )
 
 
@@ -30,7 +32,7 @@ async def generate_embeddings(model: Qwen3VLEmbedder, messages: List[Dict[str, s
         ).model_dump_json() + f"{sep}\n"
         
 
-@embedding_router.post("/embed")
+@embedding_router.post(settings.EMBED_ENDPOINT)
 async def embed(request: EmbedRequest, model = Depends(get_model_dependency)) -> StreamingResponse:
     try:
         return StreamingResponse(
