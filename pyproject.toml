@@ -1,6 +1,6 @@
 [project]
-name = "isdct_yrl-aida_simemb"
-version = "0.1.0"
+name = "yrl-aida-qwen3-embedding-serivce"
+version = "0.2.0"
 description = "Simple service for creating embeddings."
 readme = "README.md"
 requires-python = ">=3.14"
