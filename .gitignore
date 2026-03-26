@@ -19,6 +19,7 @@ wheels/
 *.jpeg
 *.png
 *.jpg
+*.zip
 
 # env
 .env
