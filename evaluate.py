@@ -1,56 +1,90 @@
+from pathlib import Path
+
 import evaluation.utils as evaluate_utils
+from src.embedding.schemas import Message
+from src.settings import settings
 
 
 
-def get_text_data():
-    """Return a list of textual elements.
+def generate_vl_request() -> list[dict]:
+    """Generate a multi-modal request payload containing text, image URLs, and base64-encoded images.
 
-    Returns:
-        list of str: A list containing text strings.
-    """
-    return [
-        "Some textual request",
-    ]
+    This function constructs a list of message dictionaries with various types (text, image_url, image)
+    for use in testing or evaluating a vision-language model API. It validates local image paths,
+    uploads them if necessary, and ensures all data is properly formatted.
 
-
-def get_image_urls():
-    """Return a list of image urls.
+    The resulting dictionary follows the schema expected by the embedding API, where each message
+    contains type-specific fields such as 'text', 'image_url', or 'image'.
 
     Returns:
-        list of str: A list containing valid image urls.
+        dict: A dictionary with a single key "messages" mapping to a list of message objects.
+              Each message is a dictionary with keys like 'type', 'text', 'image_url', or 'image',
+              properly structured for JSON serialization and API consumption.
+
+    Raises:
+        FileNotFoundError: If a specified local image file does not exist.
+        Exception: If image upload fails or an invalid image path is provided.
     """
-    return [
-        "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg",
-        "https://qianwen-res.oss-cn-beijingsdfsd.aliyuncs.com/Qwen-VL/assets/demo.jpeg",
+    messages = [
+        {
+            "type": "text",
+            "text": "Some text"
+        },
+        {
+            "type": "image_url",
+            "image_url": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg"
+        },
+        {
+            "type": "image_url",
+            "image_url": "https://qianwen-res.oss-cn-beijingsdfsd.aliyuncs.com/Qwen-VL/assets/demo.jpeg"
+        },
+        {
+            "type": "image",
+            "image": "outside_data_test/testIMG1.jpg"
+        },
+        {
+            "type": "image",
+            "image": "outside_data_test/testIMG2.jpg"
+        },
+        {
+            "type": "image",
+            "image": evaluate_utils.encode_image_base64("outside_data_test/testIMG1.jpg")
+        },
+        {
+            "type": "image/text",
+            "image": "outside_data_test/testIMG1.jpg",
+            "text": "Soldiers in a plane, actually they are paratrupers."
+        }
     ]
 
-
-def get_images():
-    """Return a list of image pahts or their Base64-encoded representations.
-
-    This function returns a predefined list containing file paths to two test images
-    and their corresponding Base64-encoded strings. It is intended for use in testing
-    or evaluation scenarios where both raw file paths and encoded image data are needed.
-
-    Returns:
-        list: A list containing strings representing image file paths
-              strings representing Base64-encoded image data.
-    """
-    return [
-        "outside_data_test/testIMG1.jpg",
-        "outside_data_test/testIMG2.jpg",
-        evaluate_utils.encode_image_base64("outside_data_test/testIMG1.jpg"),
-    ]
+    message_list = []
+    for message in messages:
+        if "image" in message:
+            if "data:image/jpeg;base64," not in message["image"]:
+                image_path = Path(message["image"])
+                if image_path.is_file():
+                    evaluate_utils.upload_image(image_path, settings.UPLOAD_URL)
+                else:
+                    raise Exception(f"Image path {message['image']} doesn't exists.")
+        message_list.append(
+            Message(
+                type=message["type"],
+                text=message.get("text", None),
+                image_url=message.get("image_url", None),
+                image=message.get("image", None)
+            ).model_dump()
+        )
+    return {"messages": message_list}
 
 
 
 if __name__ == "__main__":
     # generate request
     request_name = "test_request"
-    payload = evaluate_utils.generate_vl_request(
-        texts=get_text_data(), image_url=get_image_urls(), images=get_images()
+    request_path = evaluate_utils.save_request(
+        payload=generate_vl_request(), 
+        filename=request_name
     )
-    request_path = evaluate_utils.save_request(payload, request_name)
 
     # send request
     response_json = evaluate_utils.send_request(request_path)
