@@ -16,6 +16,11 @@ import torch.nn.functional as F
 from src.embedding.schemas import Message
 from src.settings import settings
 
+import logging
+
+
+
+logger = logging.getLogger(__name__)
 
 
 def upload_image(image_path: str, upload_image_url: str):
@@ -23,8 +28,7 @@ def upload_image(image_path: str, upload_image_url: str):
         with open(image_path, 'rb') as f:
             files = {'file': (os.path.basename(image_path), f, 'image/jpeg')}
             response = requests.post(upload_image_url, files=files)
-            print(response)
-            print(response.json())
+            logger.info(f"Uploaded image: {response.json()}")
     else:
         raise HTTPException(status_code=500, detail=f"Error: {image_path} not found.")
 

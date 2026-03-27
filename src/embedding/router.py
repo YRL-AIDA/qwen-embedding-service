@@ -57,5 +57,5 @@ async def embed(request: EmbedRequest, model = Depends(get_model_dependency)) ->
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"Unexpected error during embedding generation: {e}")
+        logger.error(f"Unexpected error during embedding generation: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
