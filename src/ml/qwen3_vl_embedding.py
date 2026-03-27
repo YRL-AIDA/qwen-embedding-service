@@ -338,6 +338,8 @@ class Qwen3VLEmbedder():
             )
         except Exception as e:
             logger.error(f"Error in processing vision info: {e}")
+            raise ValueError(f"Invalid image or video input: {str(e)}")
+
             images = None
             video_inputs = None
             video_kwargs = {'do_sample_frames': False}

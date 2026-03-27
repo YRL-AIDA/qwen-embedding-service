@@ -21,6 +21,7 @@ def get_image_urls():
     """
     return [
         "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg",
+        "https://qianwen-res.oss-cn-beijingsdfsd.aliyuncs.com/Qwen-VL/assets/demo.jpeg",
     ]
 
 
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     # generate request
     request_name = "test_request"
     payload = evaluate_utils.generate_vl_request(
-        get_text_data(), [], get_images()
+        texts=get_text_data(), image_url=get_image_urls(), images=get_images()
     )
     request_path = evaluate_utils.save_request(payload, request_name)
 

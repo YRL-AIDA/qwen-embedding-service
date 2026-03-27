@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     # ML
     text_only_model_name: str = "Qwen/Qwen3-Embedding-0.6B"
     vl_model_name: str = "Qwen/Qwen3-VL-Embedding-2B"
+    # TODO retrieve from model config
+    vl_model_output_dim: int = 2048
     max_seq_length: int = 8192
     use_vl: bool = True
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
@@ -33,8 +35,10 @@ class Settings(BaseSettings):
     # JSON
     encoding: str = "utf-8"
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
 
 
 

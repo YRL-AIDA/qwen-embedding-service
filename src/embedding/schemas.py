@@ -1,6 +1,6 @@
 from typing import Annotated, List, Union
 
-from pydantic import BaseModel, ConfigDict, SkipValidation
+from pydantic import BaseModel, ConfigDict
 
 
 
@@ -22,3 +22,4 @@ class EmbedRequest(BaseModel):
 class EmbedResponse(BaseModel):
     message_id: int
     embedding: List[float]
+    error_msg: Union[str, None] = None
