@@ -6,26 +6,37 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     # Service
-    service_address: str = "0.0.0.0"
-    service_port: int = 8000
+    SERVICE_ADDRESS: str = "0.0.0.0"
+    SERVICE_PORT: int = 8000
+
+    USE_EMBEDDER: bool = True
+    USE_RERANKER: bool = False
 
     # ML
-    text_only_model_name: str = "Qwen/Qwen3-Embedding-0.6B"
-    vl_model_name: str = "Qwen/Qwen3-VL-Embedding-2B"
+    ## EMBEDDING
+    TEXT_ONLY_MODEL_NAME: str = "Qwen/Qwen3-Embedding-0.6B"
+    VL_MODEL_NAME: str = "Qwen/Qwen3-VL-Embedding-2B"
     # TODO retrieve from model config
-    vl_model_output_dim: int = 2048
-    max_seq_length: int = 8192
-    use_vl: bool = True
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    VL_MODEL_OUTPUT_DIM: int = 2048
+    MAX_SEQ_LENGTH: int = 8192
+    USE_VL: bool = True
+    DEVICE: str = "cuda" if torch.cuda.is_available() else "cpu"
+
+    #Reranker
+    RERANKER_MODEL_NAME: str = "Qwen/Qwen3-VL-Reranker-2B"
 
     # Routes
     EMBEDDING_PREFIX: str = "/embedding"
     EMBED_ENDPOINT: str = "/embed"
-    EMBED_URL: str = f"http://{service_address}:{service_port}{EMBEDDING_PREFIX}{EMBED_ENDPOINT}"
+    EMBED_URL: str = f"http://{SERVICE_ADDRESS}:{SERVICE_PORT}{EMBEDDING_PREFIX}{EMBED_ENDPOINT}"
 
     UPLOAD_PREFIX: str = "/upload"
     UPLOAD_ENDPOINT: str = "/upload-image"
-    UPLOAD_URL: str = f"http://{service_address}:{service_port}{UPLOAD_PREFIX}{UPLOAD_ENDPOINT}"
+    UPLOAD_URL: str = f"http://{SERVICE_ADDRESS}:{SERVICE_PORT}{UPLOAD_PREFIX}{UPLOAD_ENDPOINT}"
+
+    RERANKER_PREFIX: str = "/reranker"
+    RERANK_ENDPOINT: str = "/rerank"
+    RERANK_URL: str = f"http://{SERVICE_ADDRESS}:{SERVICE_PORT}{RERANKER_PREFIX}{RERANK_ENDPOINT}"
 
     # Files
     UPLOAD_DIR: str ="uploads/"
