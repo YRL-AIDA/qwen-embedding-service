@@ -3,6 +3,11 @@ from typing import Annotated, List, Union
 from pydantic import BaseModel, ConfigDict
 
 
+# Request
+class EmbedRequest(BaseModel):
+    messages: List[Message]
+
+
 
 class Message(BaseModel):
     model_config = ConfigDict(extra='ignore')
@@ -14,12 +19,12 @@ class Message(BaseModel):
 
 
 
-class EmbedRequest(BaseModel):
-    messages: List[Message]
+# Response
+class EmbedSuccessResponse(BaseModel):
+    messages: List[MessageEmbedding]
 
 
 
-class EmbedResponse(BaseModel):
+class MessageEmbedding(BaseModel):
     message_id: int
     embedding: List[float]
-    error_msg: Union[str, None] = None

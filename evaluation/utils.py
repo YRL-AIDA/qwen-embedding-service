@@ -86,22 +86,19 @@ def save_request(payload: dict, filename: str) -> str:
     return filepath
 
 
-def send_request(request_filename: str):
+def send_request(request_filename: str, URL: str):
     with open(request_filename) as f:
         payload = json.load(f)
 
     response = requests.post(
-        settings.EMBED_URL,
+        URL,
         json=payload
     )
 
     try:
-        response_json = json.loads(
-            '{"messages":[' + f"{response.text}" + "]}"
-        )
+        response_json = json.loads(response.text)
     except json.JSONDecodeError as e:
         print(f"Not valid JSON: {e}")
-
     return response_json
 
 

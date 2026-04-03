@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import evaluation.utils as evaluate_utils
-from src.embedding.schemas import Message
+from src.embedding.schemas import EmbedRequest, Message
 from src.settings import settings
 
 
@@ -74,23 +74,34 @@ def generate_vl_request() -> list[dict]:
                 image=message.get("image", None)
             ).model_dump()
         )
-    return {"messages": message_list}
+    
+    return EmbedRequest(
+        messages=message_list
+    ).model_dump()
 
 
 
 if __name__ == "__main__":
     # generate request
-    request_name = "test_request"
+    request_name = "embed_request"
     request_path = evaluate_utils.save_request(
         payload=generate_vl_request(), 
         filename=request_name
     )
 
     # send request
-    response_json = evaluate_utils.send_request(request_path)
+    response_json = evaluate_utils.send_request(
+        request_path,
+        URL=settings.EMBED_URL
+    )
 
     # save response to json
-    evaluate_utils.save_response(response_json, filename="test_response")
+    evaluate_utils.save_response(response_json, filename="embed_response")
 
     # calculate similarity matrix
-    evaluate_utils.calculate_similarity(response_json)
+    try:
+        evaluate_utils.calculate_similarity(response_json)
+    except KeyError as e:
+        print(
+            f"Error occured during similarity calculation: Key {e} doesn't exist in the response."
+        )
