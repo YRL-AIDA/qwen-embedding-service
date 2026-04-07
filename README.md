@@ -8,16 +8,16 @@ A lightweight, embedding microservice powered by Alibaba's Qwen3-Embedding model
 docker build --pull -t qwen3-emb-service .
 
 # run service (cpu)
-docker run -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
+docker run -p $SERVICE_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
 
 # run service (gpu) (requires NVIDIA container toolkit: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
-docker run --gpus 1 -p $HOST_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
+docker run --gpus 1 -p $SERVICE_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
 ```
 
 ### 2. Test API
 Option #1:
 ```bash
-curl -X POST http://0.0.0.0:{$HOST_PORT}/embedding/embed \
+curl -X POST http://0.0.0.0:{$SERVICE_PORT}/embedding/embed \
   -H "Content-Type: application/json" \
   -d '{"messages": [{"type": "text", "text": "What is RAG?"}]}'
 ```

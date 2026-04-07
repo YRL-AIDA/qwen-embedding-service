@@ -7,19 +7,20 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     # Service
     SERVICE_ADDRESS: str = "0.0.0.0"
-    SERVICE_PORT: int = 8000
+    SERVICE_PORT: int = 10115
 
-    USE_EMBEDDER: bool = True
-    USE_RERANKER: bool = False
+    USE_EMBEDDER: bool = 0
+    USE_RERANKER: bool = 1
 
     # ML
     ## EMBEDDING
     TEXT_ONLY_MODEL_NAME: str = "Qwen/Qwen3-Embedding-0.6B"
+    USE_VL: bool = True
     VL_MODEL_NAME: str = "Qwen/Qwen3-VL-Embedding-2B"
+    
     # TODO retrieve from model config
     VL_MODEL_OUTPUT_DIM: int = 2048
     MAX_SEQ_LENGTH: int = 8192
-    USE_VL: bool = True
     DEVICE: str = "cuda" if torch.cuda.is_available() else "cpu"
 
     #Reranker

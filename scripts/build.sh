@@ -3,8 +3,13 @@
 # Exit immediately if a command exits with a non-zero status
 set -euo pipefail
 
-IMAGE_NAME="qwen3-emb-service"
-TAG="0.1.0"
+# Load environment variables from .env file if it exists
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | awk '/=/ {print $1}')
+fi
+
+IMAGE_NAME=${IMAGE_NAME:-qwen3-embedding-service}
+TAG=${TAG}
 DOCKERFILE="Dockerfile"
 
 
