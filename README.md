@@ -4,14 +4,11 @@ A lightweight, embedding microservice powered by Alibaba's Qwen3-Embedding model
 ## Quick start
 ### 1. Setup docker container
 ```bash
-# build image
-docker build --pull -t qwen3-emb-service .
+cp .env.example .env;
 
-# run service (cpu)
-docker run -p $SERVICE_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
+./scripts/build.sh;
 
-# run service (gpu) (requires NVIDIA container toolkit: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
-docker run --gpus 1 -p $SERVICE_PORT:$CONTAINER_PORT -e HF_TOKEN="$HF_TOKEN" qwen3-emb-service
+./scripts/run_container.sh
 ```
 
 ### 2. Test API
@@ -24,14 +21,15 @@ curl -X POST http://0.0.0.0:{$SERVICE_PORT}/embedding/embed \
 
 Option #2:
 ```bash
-uv run evaluate.py
+uv run evaluate.py;
+uv run evaluate_reranker.py
 ```
 
 You'll get a JSON response `/responses/response.json` with L2-normalized embeddings.
 
 
 ## API reference
-- **input**: list of strings (or dict)
+- **input**: see `src/embedding/schemas.py`
 - **output**: list of L2-normalized embeddings
 - **model**: Qwen3-Embedding-`X`B / Qwen3-VL-Embedding-`X`B
 
